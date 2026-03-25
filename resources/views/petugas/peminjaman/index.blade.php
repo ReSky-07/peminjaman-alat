@@ -146,7 +146,62 @@
                         </div>
                     </div>
 
+                    {{-- ================= MENUNGGU KONFIRMASI PENGEMBALIAN ================= --}}
+                    <h5 class="mt-5">Menunggu Konfirmasi Pengembalian</h5>
 
+                    <div class="card mb-5 shadow-sm">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover align-middle text-center">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Nama Pengguna</th>
+                                            <th>Nama Alat</th>
+                                            <th style="width: 250px;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($konfirmasi as $p)
+                                        <tr>
+                                            <td>{{ $p->user->name }}</td>
+                                            <td>{{ $p->alat->nama_alat }}</td>
+                                            <td>
+                                                <div class="d-flex flex-column gap-2">
+
+                                                    {{-- tombol approve --}}
+                                                    <form action="{{ route('petugas.peminjaman.konfirmasi', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <button class="btn btn-success btn-sm w-100">
+                                                            ✔ Setujui
+                                                        </button>
+                                                    </form>
+
+                                                    {{-- form rusak --}}
+                                                    <form action="{{ route('petugas.peminjaman.rusak', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <div class="input-group input-group-sm">
+                                                            <input type="number" name="denda"
+                                                                class="form-control"
+                                                                placeholder="Denda" required>
+                                                            <button class="btn btn-danger">
+                                                                Rusak
+                                                            </button>
+                                                        </div>
+                                                    </form>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @empty
+                                        <tr>
+                                            <td colspan="3">Tidak ada data</td>
+                                        </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     {{-- ================= PEMINJAMAN DIKEMBALIKAN ================= --}}
                     <h5 class="mt-5">Peminjaman Dikembalikan</h5>
 

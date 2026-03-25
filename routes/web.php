@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\AdminAlatController;
 use App\Http\Controllers\Admin\AdminKategoriController;
 use App\Http\Controllers\Admin\AdminPeminjamanController;
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Petugas\PetugasDashboardController;
 use App\Http\Controllers\Petugas\PetugasPeminjamanController;
 use App\Http\Controllers\Petugas\LaporanController;
@@ -29,6 +30,10 @@ Route::get('/dashboard', function () {
         default => redirect('/peminjam/dashboard'),
     };
 })->middleware('auth');
+
+
+Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -82,6 +87,9 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->group(function (
     Route::get('/peminjaman', [PetugasPeminjamanController::class, 'index'])->name('petugas.peminjaman.index');
     Route::post('/peminjaman/{peminjaman}/approve', [PetugasPeminjamanController::class, 'approve'])->name('petugas.peminjaman.approve');
     Route::post('/peminjaman/{peminjaman}/reject', [PetugasPeminjamanController::class, 'reject'])->name('petugas.peminjaman.reject');
+    // Pengembalian
+    Route::post('/peminjaman/{id}/konfirmasi', [PetugasPeminjamanController::class, 'konfirmasi'])->name('petugas.peminjaman.konfirmasi');
+    Route::post('/peminjaman/{id}/rusak', [PetugasPeminjamanController::class, 'rusak'])->name('petugas.peminjaman.rusak');
     // Laporan
     Route::get('/petugas/laporan', [PetugasLaporanController::class, 'index'])->name('petugas.laporan.index');
     Route::get('/petugas/laporan/cetak', [PetugasLaporanController::class, 'cetak'])->name('petugas.laporan.cetak');

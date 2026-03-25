@@ -13,7 +13,7 @@ class PetugasLaporanController extends Controller
     public function index(Request $request)
     {
         $query = Peminjaman::with(['user', 'alat'])
-            ->where('status', 'dikembalikan');
+            ->whereIn('status', ['dikembalikan', 'rusak']);
 
         // filter jika ada input tanggal
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
@@ -31,7 +31,7 @@ class PetugasLaporanController extends Controller
     public function cetak(Request $request)
     {
         $query = Peminjaman::with(['user', 'alat'])
-            ->where('status', 'dikembalikan');
+            ->whereIn('status', ['dikembalikan', 'rusak']);
 
         // filter jika ada input tanggal
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {

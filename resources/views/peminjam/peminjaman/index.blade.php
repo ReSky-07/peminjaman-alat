@@ -61,19 +61,22 @@
                                                 <span class="badge bg-primary">Dikembalikan</span>
                                                 @elseif ($p->status == 'ditolak')
                                                 <span class="badge bg-danger">Ditolak</span>
+                                                @elseif ($p->status == 'menunggu_konfirmasi')
+                                                <span class="badge bg-warning">Menunggu Konfirmasi Pengembalian</span>
+                                                @elseif ($p->status == 'rusak')
+                                                <span class="badge bg-danger">rusak</span>
                                                 @endif
                                             </td>
                                             <td>
                                                 @if($p->status === 'disetujui')
-                                                <form action="{{ route('peminjam.peminjaman.kembalikan', $p->id) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('Kembalikan alat ini?')"
-                                                    class="d-inline">
+                                                @if($p->status == 'disetujui')
+                                                <form action="{{ route('peminjam.peminjaman.kembalikan', $p->id) }}" method="POST">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-sm btn-outline-primary">
-                                                        <i class="fas fa-undo"></i> Kembalikan
+                                                    <button class="btn btn-warning btn-sm">
+                                                        Ajukan Pengembalian
                                                     </button>
                                                 </form>
+                                                @endif
                                                 @elseif($p->status === 'dikembalikan')
                                                 <span class="text-muted fst-italic">Selesai</span>
                                                 @else

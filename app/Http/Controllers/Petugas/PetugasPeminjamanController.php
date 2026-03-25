@@ -26,7 +26,11 @@ class PetugasPeminjamanController extends Controller
             ->latest()
             ->get();
 
-        return view('petugas.peminjaman.index', compact('pending', 'aktif', 'dikembalikan'));
+        $konfirmasi = Peminjaman::with(['user', 'alat'])
+            ->where('status', 'menunggu_konfirmasi')
+            ->get();
+
+        return view('petugas.peminjaman.index', compact('pending', 'aktif', 'dikembalikan', 'konfirmasi'));
     }
 
     public function approve(Request $request, $id)
@@ -76,5 +80,51 @@ class PetugasPeminjamanController extends Controller
 
 
         return back()->with('success', 'Peminjaman ditolak');
+    }
+
+    public function konfirmasi($id)
+    {
+        $peminjaman = Peminjaman::with('alat')->findOrFail($id);
+
+        $peminjaman->update([
+            'status' => 'dikembalikan',
+            'tanggal_kembali' => now(),
+            'denda' => 0
+        ]);
+
+        // balikin stok
+        $peminjaman->alat->increment('stok', $peminjaman->jumlah);
+
+        logActivity(
+            'Konfirmasi Pengembalian',
+            'Menyetujui pengembalian alat ' . $peminjaman->alat->nama_alat
+        );
+
+        return back()->with('success', 'Pengembalian disetujui');
+    }
+
+    public function rusak(Request $request, $id)
+    {
+        $request->validate([
+            'denda' => 'required|integer|min:0'
+        ]);
+
+        $peminjaman = Peminjaman::with('alat')->findOrFail($id);
+
+        $peminjaman->update([
+            'status' => 'rusak',
+            'tanggal_kembali' => now(),
+            'denda' => $request->denda
+        ]);
+
+        // stok tetap balik (opsional tergantung sistem)
+        $peminjaman->alat->increment('stok', $peminjaman->jumlah);
+
+        logActivity(
+            'Pengembalian Rusak',
+            'Alat ' . $peminjaman->alat->nama_alat . ' rusak, denda Rp ' . $request->denda
+        );
+
+        return back()->with('success', 'Pengembalian ditandai rusak');
     }
 }

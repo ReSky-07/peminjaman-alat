@@ -50,49 +50,17 @@ class PeminjamPeminjamanController extends Controller
 
     public function kembalikan($id)
     {
-        $peminjaman = Peminjaman::with('alat')->findOrFail($id);
+        $peminjaman = Peminjaman::findOrFail($id);
 
-        if ($peminjaman->user_id !== auth()->id()) {
-            return back()->with('error', 'Anda tidak dapat mengembalikan peminjaman ini.');
-        }
-
-        if ($peminjaman->status !== 'disetujui') {
-            return back()->with('error', 'Peminjaman belum disetujui atau sudah dikembalikan.');
-        }
-        $tanggalKembali = now();
-
-        $denda = 0;
-
-        // pastikan kolom tidak null
-        if ($peminjaman->tanggal_harus_kembali) {
-            $jatuhTempo = Carbon::parse($peminjaman->tanggal_harus_kembali)->startOfDay();
-            $tanggalKembali = Carbon::now()->startOfDay();
-
-            // hitung hanya jika lewat dari jatuh tempo
-            if ($tanggalKembali->gt($jatuhTempo)) {
-                $hariTerlambat = $tanggalKembali->diffInDays($jatuhTempo);
-                $tarif = 5000;
-                $denda = $hariTerlambat * $tarif;
-            }
-        }
-
-        // update status & tanggal kembali & denda
         $peminjaman->update([
-            'status' => 'dikembalikan',
-            'tanggal_kembali' => $tanggalKembali,
-            'denda' => $denda,
+            'status' => 'menunggu_konfirmasi',
         ]);
 
         logActivity(
-            'Pengembalian',
-            'Mengembalikan alat ' . $peminjaman->alat->nama_alat .
-                ' dengan denda Rp ' . $denda
+            'Ajukan Pengembalian',
+            'Mengajukan pengembalian alat ' . $peminjaman->alat->nama_alat
         );
 
-
-        // tambah stok alat
-        $peminjaman->alat->increment('stok', $peminjaman->jumlah);
-
-        return back()->with('success', 'Alat berhasil dikembalikan' . ($denda > 0 ? " dengan denda Rp " . number_format($denda, 0, ',', '.') : ''));
+        return back()->with('success', 'Pengembalian diajukan, menunggu konfirmasi petugas');
     }
 }

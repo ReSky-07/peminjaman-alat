@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('peminjamans', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'disetujui', 'ditolak', 'dikembalikan'])->default('pending')->change();
+            $table->enum('status', [
+                'pending',
+                'disetujui',
+                'ditolak',
+                'menunggu_konfirmasi',
+                'dikembalikan',
+                'rusak'
+            ])->default('pending')->change();
         });
     }
 
