@@ -15,6 +15,13 @@
                     </div>
                     Peminjaman
                 </a>
+                <a class="nav-link {{ request()->routeIs('petugas.user.*') ? 'active' : '' }}"
+                    href="{{ route('petugas.pengembalian.index') }}">
+                    <div class="sb-nav-link-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    Pengembalian
+                </a>
                 <a class="nav-link {{ request()->routeIs('petugas.laporan.*') ? 'active' : '' }}"
                     href="{{ route('petugas.laporan.index') }}">
                     <div class="sb-nav-link-icon">
@@ -26,7 +33,7 @@
         </div>
         <div class="sb-sidenav-footer">
             <div class="small">Logged in as:</div>
-            Start Bootstrap
+            {{ auth()->user()->name }}
         </div>
     </nav>
 </div>

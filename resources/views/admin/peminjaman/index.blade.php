@@ -60,8 +60,7 @@
                                         style="display:inline-block">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Hapus data?')">
+                                        <button type="button" class="btn btn-danger btn-sm btn-delete">
                                             Hapus
                                         </button>
                                     </form>
@@ -73,8 +72,26 @@
 
                 </div>
             </main>
-
             @include('admin.layout.footer')
+            <script>
+                document.querySelectorAll('.btn-delete').forEach(button => {
+                    button.addEventListener('click', function() {
+                        let form = this.closest("form");
+
+                        Swal.fire({
+                            title: 'Yakin?',
+                            text: 'Data tidak bisa dikembalikan!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, hapus!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    });
+                });
+            </script>
         </div>
     </div>
 </body>

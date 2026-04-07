@@ -35,32 +35,21 @@ class PeminjamPeminjamanController extends Controller
             'jumlah' => 'required|integer|min:1',
         ]);
 
-        Peminjaman::create([
+        $peminjaman = Peminjaman::create([
             'user_id' => auth()->id(),
             'alat_id' => $request->alat_id,
             'tanggal_pinjam' => $request->tanggal_pinjam,
             'jumlah' => $request->jumlah,
             'status' => 'pending',
         ]);
+        
+        logActivity(
+            'Pengajuan Peminjaman',
+            "Mengajukan peminjaman alat {$peminjaman->alat->nama_alat} sebanyak {$request->jumlah}"
+        );
 
         return redirect()
             ->route('peminjam.peminjaman.index')
             ->with('success', 'Pengajuan peminjaman berhasil dikirim');
-    }
-
-    public function kembalikan($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
-
-        $peminjaman->update([
-            'status' => 'menunggu_konfirmasi',
-        ]);
-
-        logActivity(
-            'Ajukan Pengembalian',
-            'Mengajukan pengembalian alat ' . $peminjaman->alat->nama_alat
-        );
-
-        return back()->with('success', 'Pengembalian diajukan, menunggu konfirmasi petugas');
     }
 }

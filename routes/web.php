@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Petugas\PetugasDashboardController;
 use App\Http\Controllers\Petugas\PetugasPeminjamanController;
+use App\Http\Controllers\Petugas\PetugasPengembalianController;
 use App\Http\Controllers\Petugas\LaporanController;
 use App\Http\Controllers\Peminjam\PeminjamDashboardController;
 use App\Http\Controllers\Peminjam\PeminjamPeminjamanController;
@@ -88,8 +89,9 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->group(function (
     Route::post('/peminjaman/{peminjaman}/approve', [PetugasPeminjamanController::class, 'approve'])->name('petugas.peminjaman.approve');
     Route::post('/peminjaman/{peminjaman}/reject', [PetugasPeminjamanController::class, 'reject'])->name('petugas.peminjaman.reject');
     // Pengembalian
-    Route::post('/peminjaman/{id}/konfirmasi', [PetugasPeminjamanController::class, 'konfirmasi'])->name('petugas.peminjaman.konfirmasi');
-    Route::post('/peminjaman/{id}/rusak', [PetugasPeminjamanController::class, 'rusak'])->name('petugas.peminjaman.rusak');
+    Route::get('/pengembalian', [PetugasPengembalianController::class, 'index'])->name('petugas.pengembalian.index');
+    Route::post('/pengembalian/{id}/konfirmasi', [PetugasPengembalianController::class, 'konfirmasi'])->name('petugas.pengembalian.konfirmasi');
+    Route::post('/pengembalian/{id}/rusak', [PetugasPengembalianController::class, 'rusak'])->name('petugas.pengembalian.rusak');
     // Laporan
     Route::get('/petugas/laporan', [PetugasLaporanController::class, 'index'])->name('petugas.laporan.index');
     Route::get('/petugas/laporan/cetak', [PetugasLaporanController::class, 'cetak'])->name('petugas.laporan.cetak');
@@ -107,7 +109,7 @@ Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->group(function
     // Pengembalian
     Route::post('/peminjam/pengembalian/{id}', [PeminjamPeminjamanController::class, 'kembalikan'])->name('peminjam.peminjaman.kembalikan');
     // Lihat Alat
-    Route::get('/peminjam/alat', [PeminjamAlatController::class, 'index'])->name('peminjam.alat.index');
+    Route::get('/alat', [PeminjamAlatController::class, 'index'])->name('peminjam.alat.index');
 });
 
 Route::middleware(['auth', 'role:admin,petugas'])->group(function () {

@@ -28,10 +28,11 @@
                                             <th>No</th>
                                             <th>Alat</th>
                                             <th>Tanggal Pinjam</th>
+                                            <th>Tanggal Kembali</th>
                                             <th>Jumlah</th>
+                                            <th>Unit Rusak</th>
                                             <th>Denda</th>
                                             <th>Status</th>
-                                            <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -40,7 +41,17 @@
                                             <td>{{ $index + 1 }}</td>
                                             <td>{{ $p->alat->nama_alat }}</td>
                                             <td>{{ \Carbon\Carbon::parse($p->tanggal_pinjam)->format('d-m-Y') }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($p->tanggal_harus_kembali)->format('d-m-Y') }}</td>
                                             <td>{{ $p->jumlah }}</td>
+                                            <td>
+                                                @if($p->jumlah_rusak > 0)
+                                                <span class="text-danger fw-bold">
+                                                    {{ $p->jumlah_rusak }} unit
+                                                </span>
+                                                @else
+                                                <span class="badge bg-success">0</span>
+                                                @endif
+                                            </td>
                                             <td>
                                                 @if(!is_null($p->denda) && $p->denda != 0)
                                                 <span class="text-danger fw-bold">
@@ -65,22 +76,6 @@
                                                 <span class="badge bg-warning">Menunggu Konfirmasi Pengembalian</span>
                                                 @elseif ($p->status == 'rusak')
                                                 <span class="badge bg-danger">rusak</span>
-                                                @endif
-                                            </td>
-                                            <td>
-                                                @if($p->status === 'disetujui')
-                                                @if($p->status == 'disetujui')
-                                                <form action="{{ route('peminjam.peminjaman.kembalikan', $p->id) }}" method="POST">
-                                                    @csrf
-                                                    <button class="btn btn-warning btn-sm">
-                                                        Ajukan Pengembalian
-                                                    </button>
-                                                </form>
-                                                @endif
-                                                @elseif($p->status === 'dikembalikan')
-                                                <span class="text-muted fst-italic">Selesai</span>
-                                                @else
-                                                <span class="text-muted">-</span>
                                                 @endif
                                             </td>
                                         </tr>

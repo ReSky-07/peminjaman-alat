@@ -42,10 +42,12 @@
                             </td>
                             <td>
                                 <a href="{{ route('admin.alat.edit', $alat->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('admin.alat.destroy', $alat->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin hapus alat ini?')">
+                                <form action="{{ route('admin.alat.destroy', $alat->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-danger btn-sm">Hapus</button>
+                                    <button type="button" class="btn btn-danger btn-sm btn-delete">
+                                        Hapus
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -56,6 +58,25 @@
 
             </main>
             @include('admin.layout.footer')
+            <script>
+                document.querySelectorAll('.btn-delete').forEach(button => {
+                    button.addEventListener('click', function() {
+                        let form = this.closest("form");
+
+                        Swal.fire({
+                            title: 'Yakin?',
+                            text: 'Data tidak bisa dikembalikan!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, hapus!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    });
+                });
+            </script>
         </div>
     </div>
 </body>

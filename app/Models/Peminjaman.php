@@ -20,6 +20,7 @@ class Peminjaman extends Model
         'approved_by',
         'approved_at',
         'denda',
+        'jumlah_rusak',
     ];
 
     protected $casts = [

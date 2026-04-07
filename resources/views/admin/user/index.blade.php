@@ -60,11 +60,10 @@
                                             </a>
 
                                             <form action="{{ route('admin.user.destroy',$user->id) }}"
-                                                method="POST" class="d-inline"
-                                                onsubmit="return confirm('Yakin hapus user?')">
+                                                method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button class="btn btn-danger btn-sm">
+                                                <button type="button" class="btn btn-danger btn-sm btn-delete">
                                                     <i class="fas fa-trash">Hapus</i>
                                                 </button>
                                             </form>
@@ -81,7 +80,25 @@
 
             @include('admin.layout.footer')
 
+            <script>
+                document.querySelectorAll('.btn-delete').forEach(button => {
+                    button.addEventListener('click', function() {
+                        let form = this.closest("form");
 
+                        Swal.fire({
+                            title: 'Yakin?',
+                            text: 'Data tidak bisa dikembalikan!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Ya, hapus!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    });
+                });
+            </script>
 
         </div>
     </div>
