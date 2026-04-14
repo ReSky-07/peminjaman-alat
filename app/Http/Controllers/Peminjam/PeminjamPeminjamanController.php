@@ -42,7 +42,7 @@ class PeminjamPeminjamanController extends Controller
             'jumlah' => $request->jumlah,
             'status' => 'pending',
         ]);
-        
+
         logActivity(
             'Pengajuan Peminjaman',
             "Mengajukan peminjaman alat {$peminjaman->alat->nama_alat} sebanyak {$request->jumlah}"
@@ -51,5 +51,24 @@ class PeminjamPeminjamanController extends Controller
         return redirect()
             ->route('peminjam.peminjaman.index')
             ->with('success', 'Pengajuan peminjaman berhasil dikirim');
+    }
+
+    public function uploadBukti(Request $request, $id)
+    {
+        $request->validate([
+            'bukti' => 'required|image|max:2048'
+        ]);
+
+        $peminjaman = Peminjaman::findOrFail($id);
+
+        $path = $request->file('bukti')->store('bukti', 'public');
+
+        $peminjaman->update([
+            'bukti_pembayaran' => $path,
+            'status_pembayaran' => 'menunggu_verifikasi',
+            'alasan_penolakan' => null
+        ]);
+
+        return back()->with('success', 'Bukti berhasil diupload');
     }
 }

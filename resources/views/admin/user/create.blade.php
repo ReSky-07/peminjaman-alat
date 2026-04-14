@@ -17,7 +17,7 @@
                         </div>
 
                         <div class="card-body">
-                            <form action="{{ route('admin.user.store') }}" method="POST">
+                            <form action="{{ route('admin.user.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="mb-3">
@@ -28,6 +28,21 @@
                                 <div class="mb-3">
                                     <label>Email</label>
                                     <input type="email" name="email" class="form-control" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>No HP</label>
+                                    <input type="text" name="no_hp" class="form-control" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Alamat</label>
+                                    <textarea name="alamat" class="form-control" required></textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Foto KTP</label>
+                                    <input type="file" name="foto_ktp" class="form-control">
                                 </div>
 
                                 <div class="mb-3">

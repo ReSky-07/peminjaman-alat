@@ -21,6 +21,8 @@ class Peminjaman extends Model
         'approved_at',
         'denda',
         'jumlah_rusak',
+        'bukti_pembayaran',
+        'status_pembayaran',
     ];
 
     protected $casts = [

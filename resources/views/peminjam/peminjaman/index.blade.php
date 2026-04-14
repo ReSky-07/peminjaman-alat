@@ -8,41 +8,48 @@
 
         <div id="layoutSidenav_content">
             <main>
-                <div class="container-fluid px-4 mt-4">
-                    <h3 class="mb-3">Peminjaman Saya</h3>
+                <div class="container-fluid px-4">
+
+                    <h1 class="mt-4">Data Peminjaman</h1>
+                    <ol class="breadcrumb mb-4">
+                        <li class="breadcrumb-item active">Peminjaman</li>
+                    </ol>
 
                     <a href="{{ route('peminjam.peminjaman.create') }}" class="btn btn-primary mb-4">
                         <i class="fas fa-plus me-1"></i> Ajukan Peminjaman
                     </a>
 
                     <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            <i class="fas fa-box me-1"></i> Daftar Peminjaman
-                        </div>
-
                         <div class="card-body">
+
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped align-middle text-center">
+                                <table class="table table-bordered table-hover align-middle text-center">
                                     <thead class="table-light">
                                         <tr>
                                             <th>No</th>
                                             <th>Alat</th>
-                                            <th>Tanggal Pinjam</th>
+                                            <th>Tgl Pinjam</th>
                                             <th>Tanggal Kembali</th>
                                             <th>Jumlah</th>
                                             <th>Unit Rusak</th>
                                             <th>Denda</th>
                                             <th>Status</th>
+                                            <th>Pembayaran</th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
-                                        @forelse ($peminjamans as $index => $p)
+                                        @forelse($peminjamans as $p)
                                         <tr>
-                                            <td>{{ $index + 1 }}</td>
+                                            <td>{{ $loop->iteration }}</td>
                                             <td>{{ $p->alat->nama_alat }}</td>
-                                            <td>{{ \Carbon\Carbon::parse($p->tanggal_pinjam)->format('d-m-Y') }}</td>
+                                            <td>
+                                                {{ \Carbon\Carbon::parse($p->tanggal_pinjam)->format('d-m-Y') }}
+                                            </td>
                                             <td>{{ \Carbon\Carbon::parse($p->tanggal_harus_kembali)->format('d-m-Y') }}</td>
                                             <td>{{ $p->jumlah }}</td>
+
+                                            {{-- UNIT RUSAK --}}
                                             <td>
                                                 @if($p->jumlah_rusak > 0)
                                                 <span class="text-danger fw-bold">
@@ -52,43 +59,74 @@
                                                 <span class="badge bg-success">0</span>
                                                 @endif
                                             </td>
+
+                                            {{-- DENDA --}}
                                             <td>
-                                                @if(!is_null($p->denda) && $p->denda != 0)
+                                                @if($p->denda > 0)
                                                 <span class="text-danger fw-bold">
-                                                    Rp {{ number_format(abs($p->denda), 0, ',', '.') }}
+                                                    Rp {{ number_format($p->denda, 0, ',', '.') }}
                                                 </span>
-                                                @elseif($p->denda == 0)
-                                                <span class="badge bg-success">Tidak Ada</span>
                                                 @else
-                                                <span class="text-muted">-</span>
+                                                <span class="badge bg-success">Tidak Ada</span>
                                                 @endif
                                             </td>
+
+                                            {{-- STATUS PINJAM --}}
                                             <td>
-                                                @if ($p->status == 'pending')
-                                                <span class="badge bg-warning text-dark">Menunggu</span>
-                                                @elseif ($p->status == 'disetujui')
-                                                <span class="badge bg-success">Disetujui</span>
-                                                @elseif ($p->status == 'dikembalikan')
-                                                <span class="badge bg-primary">Dikembalikan</span>
-                                                @elseif ($p->status == 'ditolak')
-                                                <span class="badge bg-danger">Ditolak</span>
-                                                @elseif ($p->status == 'menunggu_konfirmasi')
-                                                <span class="badge bg-warning">Menunggu Konfirmasi Pengembalian</span>
-                                                @elseif ($p->status == 'rusak')
-                                                <span class="badge bg-danger">rusak</span>
+                                                @if($p->status == 'pending')
+                                                <span class="badge bg-warning">Pending</span>
+
+                                                @elseif($p->status == 'disetujui')
+                                                <span class="badge bg-primary">Disetujui</span>
+
+                                                @elseif($p->status == 'menunggu_pembayaran')
+                                                <span class="badge bg-danger">Ada Denda</span>
+
+                                                @elseif($p->status == 'dikembalikan')
+                                                <span class="badge bg-success">Selesai</span>
+
+                                                @else
+                                                <span class="badge bg-secondary">{{ $p->status }}</span>
                                                 @endif
+                                            </td>
+
+                                            {{-- PEMBAYARAN --}}
+                                            <td style="width: 250px;">
+
+                                                {{-- SUDAH BAYAR --}}
+                                                @if($p->status_pembayaran == 'sudah_bayar')
+
+                                                <span class="badge bg-success">
+                                                    Lunas
+                                                </span>
+
+                                                @elseif($p->status_pembayaran == 'menunggu_verifikasi')
+
+                                                <span class="badge bg-danger">
+                                                    Belum Bayar
+                                                </span>
+
+
+                                                {{-- DEFAULT --}}
+                                                @else
+                                                <span class="badge bg-secondary">
+                                                    -
+                                                </span>
+                                                @endif
+
                                             </td>
                                         </tr>
+
                                         @empty
                                         <tr>
-                                            <td colspan="6" class="text-center text-muted">
-                                                Tidak ada data peminjaman.
-                                            </td>
+                                            <td colspan="7">Tidak ada data</td>
                                         </tr>
                                         @endforelse
                                     </tbody>
+
                                 </table>
                             </div>
+
                         </div>
                     </div>
 
@@ -98,6 +136,7 @@
             @include('peminjam.layout.footer')
         </div>
     </div>
+
 </body>
 
 </html>

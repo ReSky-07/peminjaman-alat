@@ -37,6 +37,9 @@
                                     <tr>
                                         <th>Nama</th>
                                         <th>Email</th>
+                                        <th>No HP</th>
+                                        <th>Alamat</th>
+                                        <th>KTP</th>
                                         <th>Role</th>
                                         <th width="150">Aksi</th>
                                     </tr>
@@ -46,6 +49,15 @@
                                     <tr>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
+                                        <td>{{ $user->no_hp }}</td>
+                                        <td>{{ $user->alamat }}</td>
+                                        <td>
+                                            @if($user->foto_ktp)
+                                            <img src="{{ asset('storage/' . $user->foto_ktp) }}" width="60">
+                                            @else
+                                            <span class="text-muted">-</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             <span class="badge
                                 {{ $user->role == 'admin' ? 'bg-danger' :

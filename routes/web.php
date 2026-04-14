@@ -52,7 +52,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     Route::get('/user/create', [AdminUserController::class, 'create'])->name('admin.user.create');
     Route::post('/user', [AdminUserController::class, 'store'])->name('admin.user.store');
     Route::get('/user/{user}/edit', [AdminUserController::class, 'edit'])->name('admin.user.edit');
-    Route::put('/user/{user}', [AdminUserController::class, 'update'])->name('admin.user.update');
+    Route::post('/user/{user}', [AdminUserController::class, 'update'])->name('admin.user.update');
     Route::delete('/user/{user}', [AdminUserController::class, 'destroy'])->name('admin.user.destroy');
     // Kelola Alat
     Route::get('/alat', [AdminAlatController::class, 'index'])->name('admin.alat.index');
@@ -92,6 +92,9 @@ Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->group(function (
     Route::get('/pengembalian', [PetugasPengembalianController::class, 'index'])->name('petugas.pengembalian.index');
     Route::post('/pengembalian/{id}/konfirmasi', [PetugasPengembalianController::class, 'konfirmasi'])->name('petugas.pengembalian.konfirmasi');
     Route::post('/pengembalian/{id}/rusak', [PetugasPengembalianController::class, 'rusak'])->name('petugas.pengembalian.rusak');
+    Route::post('/pengembalian/{id}/verifikasi', [PetugasPengembalianController::class, 'verifikasiPembayaran'])->name('petugas.verifikasi.pembayaran');
+    Route::post('/tolak-pembayaran/{id}', [PetugasPengembalianController::class, 'tolakPembayaran'])->name('tolak.pembayaran');
+    Route::get('/verifikasi-pembayaran/{id}', [PetugasPengembalianController::class, 'verifikasiPembayaran'])->name('verifikasi.pembayaran');
     // Laporan
     Route::get('/petugas/laporan', [PetugasLaporanController::class, 'index'])->name('petugas.laporan.index');
     Route::get('/petugas/laporan/cetak', [PetugasLaporanController::class, 'cetak'])->name('petugas.laporan.cetak');
@@ -106,8 +109,7 @@ Route::middleware(['auth', 'role:peminjam'])->prefix('peminjam')->group(function
     Route::get('/peminjaman', [PeminjamPeminjamanController::class, 'index'])->name('peminjam.peminjaman.index');
     Route::get('/peminjaman/create', [PeminjamPeminjamanController::class, 'create'])->name('peminjam.peminjaman.create');
     Route::post('/peminjaman', [PeminjamPeminjamanController::class, 'store'])->name('peminjam.peminjaman.store');
-    // Pengembalian
-    Route::post('/peminjam/pengembalian/{id}', [PeminjamPeminjamanController::class, 'kembalikan'])->name('peminjam.peminjaman.kembalikan');
+    Route::post('/peminjaman/{id}/upload-bukti', [PeminjamPeminjamanController::class, 'uploadBukti'])->name('peminjam.upload.bukti');
     // Lihat Alat
     Route::get('/alat', [PeminjamAlatController::class, 'index'])->name('peminjam.alat.index');
 });

@@ -22,6 +22,9 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'no_hp',
+        'alamat',
+        'foto_ktp'
     ];
 
     protected $routeMiddleware = [

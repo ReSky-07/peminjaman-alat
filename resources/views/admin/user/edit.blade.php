@@ -37,7 +37,7 @@
                         </div>
 
                         <div class="card-body">
-                            <form action="{{ route('admin.user.update', $user->id) }}" method="POST">
+                            <form action="{{ route('admin.user.update', $user->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="mb-3">
@@ -56,6 +56,31 @@
                                         class="form-control"
                                         value="{{ old('email', $user->email) }}"
                                         required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>No HP</label>
+                                    <input type="text"
+                                        name="no_hp"
+                                        class="form-control"
+                                        value="{{ old('no_hp', $user->no_hp) }}"
+                                        required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Alamat</label>
+                                    <textarea name="alamat" class="form-control" required>{{ old('alamat', $user->alamat) }}</textarea>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label>Foto KTP</label>
+                                    <input type="file" name="foto_ktp" class="form-control">
+
+                                    @if($user->foto_ktp)
+                                    <div class="mt-2">
+                                        <img src="{{ asset('storage/' . $user->foto_ktp) }}" width="120">
+                                    </div>
+                                    @endif
                                 </div>
 
                                 <div class="mb-3">

@@ -53,7 +53,7 @@
                                                     <form action="{{ route('petugas.pengembalian.konfirmasi', $p->id) }}" method="POST">
                                                         @csrf
                                                         <button class="btn btn-success btn-sm w-100">
-                                                            ✔ Setujui
+                                                            Setujui
                                                         </button>
                                                     </form>
 
@@ -152,6 +152,61 @@
                         </div>
                     </div>
 
+                    <!-- MENUNGGU VERIFIKASI PEMBAYARAN -->
+                    <h5 class="mt-5">Menunggu Verifikasi Pembayaran</h5>
+
+                    <div class="card mb-5 shadow-sm">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover align-middle text-center">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama Pengguna</th>
+                                            <th>Nama Alat</th>
+                                            <th>Jumlah</th>
+                                            <th>Denda</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($menungguVerifikasi as $p)
+                                        @if($p->status_pembayaran == 'menunggu_verifikasi')
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $p->user->name }}</td>
+                                            <td>{{ $p->alat->nama_alat }}</td>
+                                            <td>{{ $p->jumlah }}</td>
+
+                                            <td class="text-danger fw-bold">
+                                                Rp {{ number_format($p->denda, 0, ',', '.') }}
+                                            </td>
+
+                                            <td>
+                                                <div class="d-flex flex-column gap-2">
+
+                                                    {{-- ✅ BUTTON VERIFIKASI --}}
+                                                    <form action="{{ route('petugas.verifikasi.pembayaran', $p->id) }}" method="POST">
+                                                        @csrf
+                                                        <button class="btn btn-sm btn-success w-100">
+                                                            ✔ Verifikasi
+                                                        </button>
+                                                    </form>
+
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        @endif
+                                        @empty
+                                        <tr>
+                                            <td colspan="7">Tidak ada data</td>
+                                        </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </main>
