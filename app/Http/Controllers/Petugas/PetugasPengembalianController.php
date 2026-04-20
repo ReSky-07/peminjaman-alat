@@ -116,21 +116,17 @@ class PetugasPengembalianController extends Controller
     {
         $peminjaman = Peminjaman::with(['user', 'alat'])->findOrFail($id);
 
+        $invoice = 'INV-' . date('Ymd') . '-' . str_pad($peminjaman->id, 4, '0', STR_PAD_LEFT);
+
         $peminjaman->update([
             'status' => 'dikembalikan',
-            'status_pembayaran' => 'sudah_bayar'
-        ]);
-
-        $invoice = 'INV-' . date('Ymd') . '-' . $peminjaman->id;
-
-        $pdf = Pdf::loadView('pdf.nota', [
-            'peminjaman' => $peminjaman,
+            'status_pembayaran' => 'sudah_bayar',
             'invoice' => $invoice
         ]);
 
         // kirim email + PDF
         Mail::to($peminjaman->user->email)
-            ->send(new NotaDendaMail($peminjaman, $pdf));
+            ->send(new NotaDendaMail($peminjaman));
 
         return back()->with('success', 'Pembayaran dikonfirmasi & nota dikirim ke email');
     }

@@ -31,6 +31,10 @@
 
                             <table width="100%" style="margin-top:15px; border-collapse: collapse;">
                                 <tr>
+                                    <td>Invoice</td>
+                                    <td>: {{ $invoice }}</td>
+                                </tr>
+                                <tr>
                                     <td><strong>Nama Alat</strong></td>
                                     <td>: {{ $peminjaman->alat->nama_alat }}</td>
                                 </tr>
